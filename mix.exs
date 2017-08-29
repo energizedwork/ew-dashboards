@@ -7,14 +7,17 @@ defmodule EwDashboards.Mixfile do
       start_permanent: Mix.env == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.html": :test],
+      preferred_cli_env: ["coveralls": :test,
+                          "coveralls.detail": :test,
+                          "coveralls.html": :test],
       aliases: aliases()
     ]
   end
 
   defp deps do
     [
-      {:excoveralls, "~> 0.7", only: :test}
+      {:excoveralls, "~> 0.7", only: :test},
+      {:credo, "~> 0.8.6", only: [:dev, :test]}
     ]
   end
 
