@@ -1,12 +1,12 @@
-defmodule Mix.Tasks.Credo.Test do
+defmodule Mix.Tasks.Test.All do
   use Mix.Task
   @moduledoc """
   This is a custom Mix task to run both Credo and the Tests for the umbrella applucation
   """
 
-  @shortdoc "Runs tests and credo with one task"
+  @shortdoc "Run tests, credo, and dialyzer with one task"
   def run(_) do
-    Mix.shell.cmd("MIX_ENV=test mix do test --color, credo --strict")
+    Mix.shell.cmd("MIX_ENV=test mix do dialyzer, test --color, credo --strict")
   end
 
 end
