@@ -5,11 +5,11 @@ tasks by running `mix help` at the command prompt.
 
 ## Custom Task Descriptions
 
-> __Mix.Tasks.CredoText__
-> This task runs both the tests and credo in strict mode.
+> __Mix.Tasks.Test.All__
+> This task runs dialyzer, coveralls, test, and credo in strict mode. 
 >
 > Example:
 >
 > ``` bash
->  $ mix credo.test
+>  $ mix test.all
 > ```

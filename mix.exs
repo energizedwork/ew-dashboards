@@ -11,18 +11,13 @@ defmodule EwDashboards.Mixfile do
         "coveralls": :test,
         "coveralls.detail": :test,
         "coveralls.html": :test
-      ],
-      aliases: aliases()
+      ]
     ]
   end
 
   defp deps do
     [
-      {:excoveralls, "~> 0.7", only: :test}
+      {:excoveralls, "~> 0.7", only: [:dev, :test]}
     ]
-  end
-
-  defp aliases do
-    ["coveralls": ["coveralls.detail -u"]]
   end
 end

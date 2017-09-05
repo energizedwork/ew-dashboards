@@ -11,20 +11,21 @@ defmodule Spreadsheets.Mixfile do
       lockfile: "../../mix.lock",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Spreadsheets.Application, []}
+      extra_applications: [:logger]
+      # mod: {Spreadsheets.Application, []}
     ]
   end
 
   defp deps do
     [
-      {:elixir_google_spreadsheets, "~> 0.1.7"},
+      {:elixir_google_spreadsheets, "~> 0.1.7", only: [:prod, :dev]},
       {:tasks, in_umbrella: true, only: [:dev, :test]}
     ]
   end
