@@ -7,6 +7,7 @@ defmodule Mix.Tasks.Test.All do
   @shortdoc "Run tests, credo, and dialyzer with one task"
   def run(_) do
     Mix.shell.cmd("MIX_ENV=test mix do dialyzer, test --color, credo --strict")
+    Mix.shell.cmd("MIX_ENV=test mix coveralls -u")
   end
 
 end

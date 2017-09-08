@@ -18,11 +18,13 @@ defmodule EwDashboards.Mixfile do
 
   defp deps do
     [
-      {:excoveralls, "~> 0.7", only: :test}
+      {:excoveralls, "~> 0.7", only: [:dev, :test]}
     ]
   end
 
   defp aliases do
-    ["coveralls": ["coveralls.detail -u"]]
+    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+     "ecto.reset": ["ecto.drop", "ecto.setup"],
+     "test": ["ecto.migrate", "test"]]
   end
 end

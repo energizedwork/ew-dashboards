@@ -10,11 +10,11 @@ defmodule Tasks.Mixfile do
       deps: deps(),
       dialyzer: [
         plt_add_deps: :apps_direct,
-        plt_apps: [:dialyzer, :elixir, :kernel, :mix, :stdlib],
-        plt_add_apps: [:elixir],
+        plt_apps: [:dialyzer, :elixir, :kernel, :mix, :stdlib, :tasks],
+        plt_add_apps: [:elixir, :mix],
         paths: [
-          "../../_build/test/lib/tasks/ebin",
-          "../../_build/test/lib/schemas/ebin"
+          "../../_build/test/lib/schemas/ebin",
+          "../../_build/test/lib/spreadsheets/ebin"
         ],
         flags: [
           "-Wunmatched_returns",
