@@ -11,7 +11,8 @@ defmodule EwDashboards.Mixfile do
         "coveralls": :test,
         "coveralls.detail": :test,
         "coveralls.html": :test
-      ]
+      ],
+      aliases: aliases()
     ]
   end
 
@@ -19,5 +20,11 @@ defmodule EwDashboards.Mixfile do
     [
       {:excoveralls, "~> 0.7", only: [:dev, :test]}
     ]
+  end
+
+  defp aliases do
+    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+     "ecto.reset": ["ecto.drop", "ecto.setup"],
+     "test": ["ecto.migrate", "test"]]
   end
 end
