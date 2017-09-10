@@ -8,6 +8,9 @@ defmodule Core.Repo.Migrations.CreateWidgets do
       add :slug, :string
       add :description, :text, limit: 1_000
 
+      add :adaptor, :string, default: "2D"
+      add :renderer, :string, default: "TABLE"
+
       add :deleted, :boolean
       add :deleted_at, :utc_datetime
       add :meta, :map
