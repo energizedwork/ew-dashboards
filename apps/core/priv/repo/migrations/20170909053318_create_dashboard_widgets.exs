@@ -11,7 +11,7 @@ defmodule Core.Repo.Migrations.CreateDashboardWidgets do
       timestamps()
     end
 
-    create unique_index(:dashboard_widgets, [:dashboard_id, :widget_id])
+    create unique_index(:dashboard_widgets, [:dashboard_id, :widget_id], name: :index_unique_dashboard_widget_idx)
     create index(:dashboard_widgets, [:dashboard_id])
     create index(:dashboard_widgets, [:widget_id])
   end
