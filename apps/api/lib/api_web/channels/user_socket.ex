@@ -2,7 +2,7 @@ defmodule ApiWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", ApiWeb.RoomChannel
+  channel "dataSource:*", ApiWeb.DataSourceChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
