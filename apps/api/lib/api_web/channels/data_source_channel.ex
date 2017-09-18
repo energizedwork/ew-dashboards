@@ -29,13 +29,13 @@ defmodule ApiWeb.DataSourceChannel do
     push socket, "join", %{status: "connected"}
     {:noreply, socket}
   end
+
   def handle_info(:ping, socket) do
-    body =
-      %{"data" => [
-        ["Jan", "Feb", "Mar"],
-        [(to_string :rand.uniform(100)), "200", (to_string :rand.uniform(300))],
-        ["xxx", "yyy", "zzz"]]
-      }
+    # TODO error handling etc
+    {:ok, pid} = Spreadsheets.Client.Google.get_spreadsheet(%{name: System.get_env("GOOGLE_SHEET_ID")})
+    {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: 3, cols: 12})
+
+    body = %{"data" => spreadsheet}
 
     push socket, "new:msg", %{user: "SYSTEM", body: body}
 
