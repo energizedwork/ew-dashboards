@@ -1,6 +1,8 @@
 defmodule ApiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :api
 
+  import Phoenix.Controller, only: [accepts: 2]
+
   socket "/socket", ApiWeb.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
@@ -35,6 +37,11 @@ defmodule ApiWeb.Endpoint do
     store: :cookie,
     key: "_api_key",
     signing_salt: "puUMsZpe"
+
+  plug CORSPlug
+  plug :accepts, ["json-api"]
+  plug JaSerializer.ContentTypeNegotiation
+  plug JaSerializer.Deserializer
 
   plug ApiWeb.Router
 

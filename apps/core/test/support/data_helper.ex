@@ -14,13 +14,13 @@ defmodule Core.DataHelper do
 
   def generate_widget(author) do
     %Widget{}
-    |> Widget.changeset(%{name: "Widget 1", author_id: author.id})
+    |> Widget.changeset(%{name: "Widget 1", author_id: author.id, widget_data_sources: []})
     |> Core.Repo.insert!()
   end
 
   def generate_dashboard(author) do
     %Dashboard{}
-    |> Dashboard.changeset(%{name: "Dashboard 1", slug: "dashboar-1", author_id: author.id})
+    |> Dashboard.changeset(%{name: "Dashboard 1", slug: "dashboar-1", dashboard_widgets: [], author_id: author.id})
     |> Core.Repo.insert!()
   end
 
