@@ -20,10 +20,8 @@ defmodule Core.DataCase do
     end
   end
 
-  setup tags do
+  setup _tags do
     Sandbox.checkout(Core.Repo)
-    Sandbox.mode(Core.Repo, {:shared, self()})
-
     :ok
   end
 

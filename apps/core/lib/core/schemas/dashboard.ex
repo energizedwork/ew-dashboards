@@ -26,6 +26,9 @@ defmodule Core.Schemas.Dashboard do
 
     belongs_to :author, Author, type: Ecto.UUID
 
+    has_many :dashboard_widgets, DashboardWidget, on_delete: :delete_all, on_replace: :delete
+    has_many :widgets, through: [:dashboard_widgets, :widgets]
+
     timestamps type: :utc_datetime
   end
 
@@ -38,5 +41,6 @@ defmodule Core.Schemas.Dashboard do
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:dashboard, name: @unique_index, message: @unique_error)
+    |> put_assoc(:dashboard_widgets, params["dashboard_widgets"])
   end
 end
