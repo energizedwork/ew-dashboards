@@ -8,7 +8,10 @@ defmodule Core.Schemas.Dashboard do
 
   """
 
-  alias Core.Schemas.Author
+  alias Core.Schemas.{
+    Author,
+    DashboardWidget
+  }
 
   @unique_index :index_unique_active_dashboards_idx
   @unique_error "already exists"
@@ -35,12 +38,22 @@ defmodule Core.Schemas.Dashboard do
   @required_fields ~w(name slug author_id)a
   @optional_fields ~w(description deleted deleted_at meta)a
 
-  def changeset(model, params \\ %{}) do
+  def changeset(model, params \\ %{})
+
+  def changeset(model, %{"dashboard_widgets" => widgets} = params) when is_list(widgets) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:dashboard, name: @unique_index, message: @unique_error)
     |> put_assoc(:dashboard_widgets, params["dashboard_widgets"])
+  end
+
+  def changeset(model, params) do
+    model
+    |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
+    |> foreign_key_constraint(:author_id)
+    |> unique_constraint(:dashboard, name: @unique_index, message: @unique_error)
   end
 end

@@ -51,12 +51,22 @@ defmodule Core.Schemas.Widget do
     deleted_at
   )a
 
-  def changeset(model, params \\ %{}) do
+  def changeset(model, params \\ %{})
+
+  def changeset(model, %{"widget_data_sources" => data_sources} = params) when is_list(data_sources) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:widget, name: @unique_index, message: @unique_error)
     |> put_assoc(:widget_data_sources, params["widget_data_sources"])
+  end
+
+  def changeset(model, params) do
+    model
+    |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
+    |> foreign_key_constraint(:author_id)
+    |> unique_constraint(:widget, name: @unique_index, message: @unique_error)
   end
 end
