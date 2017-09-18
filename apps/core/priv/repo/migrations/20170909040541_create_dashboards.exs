@@ -4,8 +4,8 @@ defmodule Core.Repo.Migrations.CreateDashboards do
   def up do
     create table(:dashboards, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :name, :string
-      add :slug, :string
+      add :name, :string, null: false
+      add :slug, :string, null: false
       add :description, :text, limit: 1_000
 
       add :deleted, :boolean

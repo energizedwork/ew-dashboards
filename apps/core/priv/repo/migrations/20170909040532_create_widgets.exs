@@ -4,9 +4,11 @@ defmodule Core.Repo.Migrations.CreateWidgets do
   def up do
     create table(:widgets, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :name, :string
-      add :slug, :string
+      add :name, :string, null: false
       add :description, :text, limit: 1_000
+
+      add :adapter, :string, default: "2D"
+      add :renderer, :string, default: "TABLE"
 
       add :deleted, :boolean
       add :deleted_at, :utc_datetime

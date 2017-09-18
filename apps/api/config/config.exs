@@ -13,7 +13,7 @@ config :api,
 config :api, ApiWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "EUPjb8yuTnIAQSKnIoqsHshXU3L/XTXvJgy1M7sagXIOx9E9JNm5j/VwmrKsW6SP",
-  render_errors: [view: ApiWeb.ErrorView, accepts: ~w(json)],
+  render_errors: [view: ApiWeb.ErrorView, accepts: ~w(json-api)],
   pubsub: [name: Api.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
@@ -21,6 +21,14 @@ config :api, ApiWeb.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+# Mime type for JSON API
+config :phoenix, :format_encoders,
+  "json-api": Poison
+
+config :mime, :types, %{
+  "application/vnd.api+json" => ["json-api"]
+}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -11,7 +11,7 @@ defmodule Core.Repo.Migrations.CreateWidgetDataSources do
       timestamps()
     end
 
-    create unique_index(:widget_data_sources, [:data_source_id, :widget_id])
+    create unique_index(:widget_data_sources, [:data_source_id, :widget_id], name: :index_unique_widget_data_source_idx)
     create index(:widget_data_sources, [:widget_id])
     create index(:widget_data_sources, [:data_source_id])
   end

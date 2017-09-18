@@ -1,11 +1,13 @@
 defmodule ApiWeb.Router do
   use ApiWeb, :router
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
-  scope "/api", ApiWeb do
-    pipe_through :api
+  scope "/api", as: :api, alias: ApiWeb.Api do
+    scope "/v1", as: :v1, alias: V1 do
+      get "/:type", ResourceController, :index
+      get "/:type/:id", ResourceController, :show
+      post "/:type", ResourceController, :create
+      patch "/:type", ResourceController, :update
+      delete "/:type/:id", ResourceController, :delete
+    end
   end
 end

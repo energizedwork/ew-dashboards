@@ -39,7 +39,10 @@ defmodule Api.Mixfile do
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:cors_plug, "~> 1.4"},
+      {:ja_serializer, "~> 0.12.0"},
+      {:uuid, "~> 1.1", only: [:test]}
     ]
   end
 end

@@ -9,7 +9,7 @@ defmodule Core.DataCase do
 
   """
 
-  defmacro __using__(_opts) do
+  using do
     quote do
       alias Core.Repo
 
@@ -20,9 +20,9 @@ defmodule Core.DataCase do
     end
   end
 
-  setup do
+  setup _tags do
     Sandbox.checkout(Core.Repo)
-    Sandbox.mode(Core.Repo, {:shared, self()})
     :ok
   end
+
 end

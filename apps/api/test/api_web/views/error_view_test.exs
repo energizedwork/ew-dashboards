@@ -6,16 +6,16 @@ defmodule ApiWeb.ErrorViewTest do
 
   test "renders 404.json" do
     assert render(ApiWeb.ErrorView, "404.json", []) ==
-           %{errors: %{detail: "Page not found"}}
+      %{errors: [%{status: "404"}]}
   end
 
   test "render 500.json" do
     assert render(ApiWeb.ErrorView, "500.json", []) ==
-           %{errors: %{detail: "Internal server error"}}
+      %{errors: [%{status: "500"}]}
   end
 
   test "render any other" do
     assert render(ApiWeb.ErrorView, "505.json", []) ==
-           %{errors: %{detail: "Internal server error"}}
+      %{errors: [%{status: "505"}]}
   end
 end

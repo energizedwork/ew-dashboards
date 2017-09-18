@@ -31,6 +31,7 @@ defmodule Core.Mixfile do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.2"},
+      {:uuid, "~> 1.1"},
       {:tasks, in_umbrella: true, only: [:dev, :test]}
     ]
   end
