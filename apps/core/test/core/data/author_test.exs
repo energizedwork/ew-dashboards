@@ -7,6 +7,11 @@ defmodule Core.Data.AuthorTest do
 
   alias Core.Data.Author
 
+  test "get an author by id" do
+    assert {:ok, author} = Author.upsert(%{"username" => "bob-dobbs"})
+    assert {:ok, author} == Author.get(author.id)
+  end
+
   test "create a new author with valid params" do
     assert [] = Author.all()
     assert {:ok, author} = Author.upsert(%{"username" => "bob-dobbs"})
@@ -28,10 +33,15 @@ defmodule Core.Data.AuthorTest do
     {:ok, author} = Author.upsert(%{"username" => "bob-dobbs"})
     refute author.deleted
     refute author.deleted_at
-    assert {:ok, deleted} = Author.delete(author.id)
-    assert deleted.deleted
-    assert deleted.deleted_at
-    assert [deleted] == Author.all()
+    assert :ok = Author.delete(author.id)
+    assert [] = Author.all()
   end
 
+  test "get an author with bad id" do
+    assert {:error, "Invalid :binary_id with value \"1\""} = Author.delete("1")
+  end
+
+  test "delete an author with bad id" do
+    assert {:error, "Invalid :binary_id with value \"1\""} = Author.delete("1")
+  end
 end

@@ -59,7 +59,7 @@ defmodule Core.Schemas.Widget do
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:widget, name: @unique_index, message: @unique_error)
-    |> put_assoc(:widget_data_sources, params["widget_data_sources"])
+    |> cast_assoc(:widget_data_sources, data_sources)
   end
 
   def changeset(model, params) do

@@ -46,7 +46,7 @@ defmodule Core.Schemas.Dashboard do
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:dashboard, name: @unique_index, message: @unique_error)
-    |> put_assoc(:dashboard_widgets, params["dashboard_widgets"])
+    |> cast_assoc(:dashboard_widgets, params["dashboard_widgets"])
   end
 
   def changeset(model, params) do

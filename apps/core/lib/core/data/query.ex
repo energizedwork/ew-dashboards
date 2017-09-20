@@ -16,30 +16,43 @@ defmodule Core.Data.Query do
 
   defmacro __using__(opts \\ []) do
     schema = opts[:schema] || __CALLER__.module
+    preloads = opts[:preloads] || []
     quote do
       alias Core.Repo
       alias unquote(schema)
+
+      import Ecto.Query, only: [from: 2]
 
       @type t :: %unquote(schema){}
       @behaviour Core.Data.Query
 
       def all(repo \\ Repo) do
-        unquote(schema)
+        from(m in unquote(schema), where: m.deleted == false)
         |> repo.all()
+        |> repo.preload(unquote(preloads))
       end
 
       def get(id, repo \\ Repo)
       def get(id, repo) when is_binary(id) do
-        repo.get_by(unquote(schema), %{id: id})
+        try do
+          result = unquote(schema)
+          |> repo.get_by(%{id: id})
+          |> repo.preload(unquote(preloads))
+
+          {:ok, result}
+        rescue
+          error ->
+            {:error, "Invalid #{inspect error.type} with value #{inspect error.value}"}
+        end
       end
-      def get(_id, _repo), do: nil
+      def get(_id, _repo), do: {:ok, nil}
 
       def upsert(params, repo \\ Repo) do
-        with %unquote(schema){} = model <- get(params["id"], repo),
+        with {:ok, %unquote(schema){} = model} <- get(params["id"], repo),
              {:ok, %unquote(schema){}} = result <- update(model, params, repo) do
           result
         else
-          nil ->
+          {:ok, nil} ->
             create(params, repo)
           {:error, %Ecto.Changeset{}} = changeset_error ->
             changeset_error
@@ -53,13 +66,19 @@ defmodule Core.Data.Query do
           "id" => id,
           "deleted" => true,
           "deleted_at" => DateTime.utc_now()
-        } |> upsert(repo)
+        }
+        |> upsert(repo)
+        |> case do
+             {:ok, %unquote(schema){}} -> :ok
+             error -> error
+           end
       end
 
       defp update(%unquote(schema){} = author, params, repo) do
         author
         |> unquote(schema).changeset(params)
         |> repo.update()
+        |> preload(repo)
       end
       defoverridable [update: 3]
 
@@ -67,8 +86,15 @@ defmodule Core.Data.Query do
         %unquote(schema){}
         |> unquote(schema).changeset(params)
         |> repo.insert()
+        |> preload(repo)
       end
       defoverridable [create: 2]
+
+      defp preload({:ok, model}, repo) do
+        {:ok, repo.preload(model, unquote(preloads))}
+      end
+
+      defp preload(error, _repo), do: error
 
     end
   end
