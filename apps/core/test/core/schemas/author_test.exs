@@ -28,6 +28,6 @@ defmodule Core.Schemas.AuthorTest do
     |> Author.changeset(@valid_attrs)
     |> Repo.insert
 
-    assert changeset.errors == [author: {"already exists", []}]
+    assert changeset.errors == [username: {"has already been taken", []}]
   end
 end

@@ -21,6 +21,12 @@ defmodule ApiWeb.Api.V1.FallbackController do
     |> render_errors(%{status: "401", detail: "Unauthorized"})
   end
 
+  def call(conn, {:error, %Ecto.Changeset{errors: errors}}) do
+    conn
+    |> put_status(:bad_request)
+    |> render_errors(%{status: "400", detail: format_changest_errors(errors)})
+  end
+
   def call(conn, {:error, reason}) do
     conn
     |> put_status(:bad_request)
@@ -42,6 +48,10 @@ defmodule ApiWeb.Api.V1.FallbackController do
     conn
     |> put_view(ApiWeb.ErrorView)
     |> render("errors.json-api", data: data)
+  end
+
+  defp format_changest_errors(errors) do
+    Enum.map(errors, fn({key, {val, _}}) -> "#{key} #{val}" end)
   end
 
 end

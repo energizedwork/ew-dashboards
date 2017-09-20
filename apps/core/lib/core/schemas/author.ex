@@ -8,7 +8,6 @@ defmodule Core.Schemas.Author do
   """
 
   @unique_index :index_unique_active_authors_idx
-  @unique_error "already exists"
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -29,6 +28,6 @@ defmodule Core.Schemas.Author do
     model
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:author, name: @unique_index, message: @unique_error)
+    |> unique_constraint(:username, name: @unique_index)
   end
 end
