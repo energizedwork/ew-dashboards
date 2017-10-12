@@ -31,9 +31,12 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def handle_info(:ping, socket) do
+    rows = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_ROWS") || "4")
+    cols = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_COLS") || "12")
+
     # TODO error handling etc
     {:ok, pid} = Spreadsheets.Client.Google.get_spreadsheet(%{name: System.get_env("GOOGLE_SHEET_ID")})
-    {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: 3, cols: 12})
+    {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: rows, cols: cols})
 
     body = %{"data" => spreadsheet}
 
