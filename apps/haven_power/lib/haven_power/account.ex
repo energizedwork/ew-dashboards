@@ -19,7 +19,7 @@ defmodule HavenPower.Account do
   # You could add additional attributes here to keep track of for a given account
   defstruct account_id: 0,
             name: "",
-            some_attribute: "",
+            data: [],
             widgets_ordered: 1,
             timer_ref: nil
 
@@ -95,8 +95,14 @@ defmodule HavenPower.Account do
   def handle_info(:fetch_data, state) do
 
     # update the state from the DB in imaginary land. Hardcoded for now.
+    new_state =
+      HavenPower.Repo.get(HavenPower.Account, state.account_id)
+
     updated_state =
-      %__MODULE__{ state | widgets_ordered: 1, name: "Account foobar" }
+      case new_state do
+        nil -> state
+        _ -> %__MODULE__{ state | data: new_state.data, name: new_state.name }
+      end
 
     {:noreply, updated_state}
   end
@@ -150,7 +156,7 @@ defmodule HavenPower.Account do
     response = %{
       id: state.account_id,
       name: state.name,
-      some_attribute: state.some_attribute,
+      data: state.data,
       widgets_ordered: state.widgets_ordered
     }
 
