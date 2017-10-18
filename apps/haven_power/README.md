@@ -6,6 +6,7 @@ One process will be created per account lookup.
 
 ```bash
 $ cd apps/haven_power
+$ mix deps.get
 $ iex -S mix
 ```
 
