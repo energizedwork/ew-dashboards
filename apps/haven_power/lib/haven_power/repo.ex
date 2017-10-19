@@ -1,7 +1,4 @@
 defmodule HavenPower.Repo do
-
-  # require HavenPower.Account
-
   @moduledoc """
   In memory Repository
   """
@@ -17,8 +14,9 @@ defmodule HavenPower.Repo do
   end
 
   def all(HavenPower.Account) do
-    [%HavenPower.Account{account_id: 1, name: "Gus", data: random_data},
-     %HavenPower.Account{account_id: 2, name: "Matt", data: random_data}
+    [%HavenPower.Account{account_id: 1, name: "Gus", data: [["Apr", "May", "Jun"], ["4", "5", "6"]]},
+     %HavenPower.Account{account_id: 2, name: "Matt", data: [["Jan", "Feb", "Mar"], ["1", "2", "3"]]},
+     %HavenPower.Account{account_id: 998877, name: "UI WIdget", data: random_data()}
     ]
   end
   def all(_module), do: []
@@ -40,9 +38,9 @@ defmodule HavenPower.Repo do
     headers =
       0..maxDays
 
-    body =
+    randomReadings =
       Enum.reduce(1..maxTime, [],
-        fn(x, acc) ->
+        fn(_x, acc) ->
           Enum.concat([
             Enum.map(
               Enum.take_random(1..1000, maxDays),
@@ -53,7 +51,7 @@ defmodule HavenPower.Repo do
       )
 
     body =
-      body
+      randomReadings
       |> Enum.with_index
       |> Enum.map(
           fn{row, index} ->
@@ -63,7 +61,6 @@ defmodule HavenPower.Repo do
             Enum.concat([y_axis_label], row)
           end
       )
-
 
     Enum.concat(
       [Enum.map(headers, &Kernel.to_string/1)],
