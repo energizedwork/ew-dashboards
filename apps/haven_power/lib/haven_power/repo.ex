@@ -1,0 +1,73 @@
+defmodule HavenPower.Repo do
+
+  # require HavenPower.Account
+
+  @moduledoc """
+  In memory Repository
+  """
+
+  def get(module, id) do
+    Enum.find all(module), fn map -> map.account_id == id end
+  end
+
+  def get_by(module, params) do
+    Enum.find all(module), fn map ->
+      Enum.all?(params, fn {key, val} -> Map.get(map, key) == val end)
+    end
+  end
+
+  def all(HavenPower.Account) do
+    [%HavenPower.Account{account_id: 1, name: "Gus", data: random_data},
+     %HavenPower.Account{account_id: 2, name: "Matt", data: random_data}
+    ]
+  end
+  def all(_module), do: []
+
+
+  def random_data do
+    now =
+      Timex.parse!("Wed, 18 Oct 2017 00:00:00 Z", "{RFC1123z}")
+
+    maxDays =
+      365
+
+    maxTime =
+      48
+
+    readingFrequencyMins =
+      30
+
+    headers =
+      0..maxDays
+
+    body =
+      Enum.reduce(1..maxTime, [],
+        fn(x, acc) ->
+          Enum.concat([
+            Enum.map(
+              Enum.take_random(1..1000, maxDays),
+              &Kernel.to_string/1
+            )
+          ], acc)
+        end
+      )
+
+    body =
+      body
+      |> Enum.with_index
+      |> Enum.map(
+          fn{row, index} ->
+            datetime = Timex.shift(now, [minutes: index * readingFrequencyMins])
+            {:ok, y_axis_label} = Timex.format(datetime, "{h24}:{m}")
+
+            Enum.concat([y_axis_label], row)
+          end
+      )
+
+
+    Enum.concat(
+      [Enum.map(headers, &Kernel.to_string/1)],
+      body
+    )
+  end
+end

@@ -14,7 +14,27 @@ defmodule ApiWeb.DataSourceChannel do
   """
   def join("dataSource:sheets", message, socket) do
     Process.flag(:trap_exit, true)
-    :timer.send_interval(5000, :ping)
+    :timer.send_interval(5000, :ping_from_google)
+    send(self, {:after_join, message})
+
+    {:ok, socket}
+  end
+
+  def join("dataSource:sheets:" <> sheet_id, message, socket) do
+    IO.puts "***************************************************"
+    IO.puts "Joined with sheet_id: #{sheet_id}"
+    Process.flag(:trap_exit, true)
+    :timer.send_interval(5000, :ping_from_google)
+    send(self, {:after_join, message})
+
+    {:ok, socket}
+  end
+
+  def join("dataSource:haven:" <> account_id, message, socket) do
+    IO.puts "***************************************************"
+    IO.puts "Joined with account_id: #{account_id}"
+    Process.flag(:trap_exit, true)
+    :timer.send_interval(5000, :ping_from_haven)
     send(self, {:after_join, message})
 
     {:ok, socket}
@@ -30,7 +50,7 @@ defmodule ApiWeb.DataSourceChannel do
     {:noreply, socket}
   end
 
-  def handle_info(:ping, socket) do
+  def handle_info(:ping_from_google, socket) do
     rows = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_ROWS") || "4")
     cols = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_COLS") || "12")
 
@@ -39,6 +59,19 @@ defmodule ApiWeb.DataSourceChannel do
     {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: rows, cols: cols})
 
     body = %{"data" => spreadsheet}
+
+    push socket, "new:msg", %{user: "SYSTEM", body: body}
+
+    {:noreply, socket}
+  end
+
+  def handle_info(:ping_from_haven, socket) do
+
+    account_id = 1
+    HavenPower.AccountSupervisor.find_or_create_process(account_id)
+    account = HavenPower.Account.details(account_id)
+
+    body = %{"data" => account.data}
 
     push socket, "new:msg", %{user: "SYSTEM", body: body}
 
