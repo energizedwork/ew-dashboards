@@ -30,7 +30,7 @@ defmodule Core.Schemas.Dashboard do
     belongs_to :author, Author, type: Ecto.UUID
 
     has_many :dashboard_widgets, DashboardWidget, on_delete: :delete_all, on_replace: :delete
-    has_many :widgets, through: [:dashboard_widgets, :widgets]
+    has_many :widgets, through: [:dashboard_widgets, :widget]
 
     timestamps type: :utc_datetime
   end
@@ -40,13 +40,13 @@ defmodule Core.Schemas.Dashboard do
 
   def changeset(model, params \\ %{})
 
-  def changeset(model, %{"dashboard_widgets" => widgets} = params) when is_list(widgets) do
+  def changeset(model, %{"dashboard_widgets" => dashboard_widgets} = params) when is_list(dashboard_widgets) do
     model
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:author_id)
     |> unique_constraint(:dashboard, name: @unique_index, message: @unique_error)
-    |> cast_assoc(:dashboard_widgets, params["dashboard_widgets"])
+    |> cast_assoc(:dashboard_widgets, dashboard_widgets)
   end
 
   def changeset(model, params) do

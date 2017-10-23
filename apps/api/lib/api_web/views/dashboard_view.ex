@@ -13,4 +13,7 @@ defmodule ApiWeb.Api.V1.DashboardView do
     serializer: ApiWeb.Api.V1.AuthorView,
     include: true
 
+  has_many :widgets,
+    serializer: ApiWeb.Api.V1.WidgetView,
+    include: true
 end
