@@ -69,7 +69,7 @@ defmodule ApiWeb.DataSourceChannel do
 
     body = %{"data" => spreadsheet}
 
-    push socket, "new:msg", %{user: "SYSTEM", body: body}
+    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: body}
 
     {:noreply, socket}
   end
@@ -84,7 +84,7 @@ defmodule ApiWeb.DataSourceChannel do
 
     body = %{"data" => account.data}
 
-    push socket, "new:msg", %{user: "SYSTEM", body: body}
+    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string account_id), body: body}
 
     {:noreply, socket}
   end
