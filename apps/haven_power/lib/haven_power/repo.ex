@@ -32,6 +32,9 @@ defmodule HavenPower.Repo do
     maxTime =
       48
 
+    maxValue =
+      1230
+
     readingFrequencyMins =
       30
 
@@ -43,7 +46,7 @@ defmodule HavenPower.Repo do
         fn(_x, acc) ->
           Enum.concat([
             Enum.map(
-              Enum.take_random(1..1000, maxDays),
+              Enum.take_random(1..maxValue, maxDays),
               &Kernel.to_string/1
             )
           ], acc)
