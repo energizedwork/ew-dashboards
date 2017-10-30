@@ -7,7 +7,7 @@ defmodule DataStore.Actions.RequestGoogleSpreadsheetData do
 
   Example:
 
-  iex> rum("1goNDckM11s023VmhhsuV2Ll3D-f61J2Vv2RLWwcy8q4", %{sheet_name: "Sheet1", range: "A1:B2"})
+  iex> run("1goNDckM11s023VmhhsuV2Ll3D-f61J2Vv2RLWwcy8q4", %{sheet_name: "Sheet1", range: "A1:B2"})
   %{"majorDimension" => "ROWS", "range" => "Sheet1!A1:B2",
   "values" => [["Column A", "Column B"],
   ["Value A1", "Value B1"],
