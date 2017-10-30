@@ -1,0 +1,51 @@
+defmodule GoogleSpreadsheet do
+  use GenServer,
+    start: {GoogleSpreadsheet, :start_link, []},
+    restart: :transient
+
+  defmodule QueryData do
+    defstruct [
+      sheet_name: "Sheet1",
+      range: "A1:B2"]
+  end
+
+  @moduledoc """
+  This is the GenServer for storing/refreshing data from google spreadsheets. When started it represents a
+  single spreadsheet and refreshes the data on the `@update_interval`. The data is populated from the init
+  function but it does not block the startup of the process. Once the data is refreshed calling `data/1`
+  returns the data for the given spredsheet.
+
+  Example:
+
+  iex> GoogleSpreadsheet.data("1goNDckM11s023VmhhsuV2Ll3D-f61J2Vv2RLWwcy8q4")
+  %{"majorDimension" => "ROWS", "range" => "Sheet1!A1:B2",
+  "values" => [["Column A", "Column B"],
+  ["Value A1", "Value B1"],
+  ["Value A2", "Value B2"]}
+
+  """
+  @update_interval 10_000
+
+  def start_link(spreadsheet_id, actions, query_data),
+    do: GenServer.start_link(__MODULE__, [spreadsheet_id, actions, query_data], name: String.to_atom(spreadsheet_id))
+
+  def data(spreadsheet_id) do
+    spreadsheet_id
+    |> String.to_existing_atom()
+    |> GenServer.call(:data)
+  end
+
+  def init([spreadsheet_id, actions, query_data]) do
+    Registry.register(DataStore.Registry, :google_spreadsheet, spreadsheet_id)
+    send(self(), :refresh_data)
+    {:ok, %{spreadsheet_id: spreadsheet_id, actions: actions, query_data: query_data}}
+  end
+
+  def handle_info(:refresh_data, %{spreadsheet_id: spreadsheet_id, actions: actions, query_data: query_data} = state) do
+    Process.send_after(self(), :refresh_data, @update_interval)
+    {:noreply, Map.put(state, :data, actions[:request_data].run(spreadsheet_id, query_data))}
+  end
+
+  def handle_call(:data, _from, %{data: data} = state),
+    do: {:reply, data, state}
+end
