@@ -1,9 +1,9 @@
-defmodule Spreadsheets.Mixfile do
+defmodule DataStore.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :spreadsheets,
+      app: :data_store,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -11,22 +11,23 @@ defmodule Spreadsheets.Mixfile do
       lockfile: "../../mix.lock",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls]
+      deps: deps()
     ]
   end
 
+  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
-      # mod: {Spreadsheets.Application, []}
+      extra_applications: [:logger, :httpoison, :goth],
+      mod: {DataStore.Application, []}
     ]
   end
 
+  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:elixir_google_spreadsheets, "~> 0.1.7", only: [:prod, :dev]},
-      {:tasks, in_umbrella: true, only: [:dev, :test]}
+      {:goth, "~> 0.7.0"},
+      {:httpoison, "~> 0.13.0"}
     ]
   end
 end

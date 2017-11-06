@@ -21,8 +21,8 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def join("dataSource:sheets:" <> sheet_id, message, socket) do
-    IO.puts "***************************************************"
-    IO.puts "Joined with sheet_id: #{sheet_id}"
+    Logger.debug "***************************************************"
+    Logger.debug "Joined with sheet_id: #{sheet_id}"
 
     socket = assign(socket, :sheet_id, sheet_id)
 
@@ -34,8 +34,8 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def join("dataSource:haven:" <> account_id, message, socket) do
-    IO.puts "***************************************************"
-    IO.puts "Joined with account_id: #{account_id}"
+    Logger.debug "***************************************************"
+    Logger.debug "Joined with account_id: #{account_id}"
 
     socket = assign(socket, :account_id, account_id)
 
@@ -57,19 +57,14 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def handle_info(:ping_from_google, socket) do
-    rows = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_ROWS") || "4")
-    cols = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_COLS") || "12")
-
     sheet_id = socket.assigns[:sheet_id]
-    IO.puts "Getting details for sheet: #{sheet_id}"
+    Logger.debug "Getting details for sheet: #{sheet_id}"
 
     # TODO error handling etc
-    {:ok, pid} = Spreadsheets.Client.Google.get_spreadsheet(%{name: sheet_id})
-    {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: rows, cols: cols})
+    spreadsheet =
+      GenServer.call(DataStore.Receiver, {:get, sheet_id, :google_spreadsheet, %{sheet_name: "grid", range: "A1:NB49"}})
 
-    body = %{"data" => spreadsheet}
-
-    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: body}
+    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: %{"data" => spreadsheet["values"]}}
 
     {:noreply, socket}
   end
@@ -77,7 +72,7 @@ defmodule ApiWeb.DataSourceChannel do
   def handle_info(:ping_from_haven, socket) do
 
     account_id = socket.assigns[:account_id] |> String.to_integer
-    IO.puts "Getting details for account: #{account_id}"
+    Logger.debug "Getting details for account: #{account_id}"
 
     HavenPower.AccountSupervisor.find_or_create_process(account_id)
     account = HavenPower.Account.details(account_id)
