@@ -57,19 +57,14 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def handle_info(:ping_from_google, socket) do
-    rows = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_ROWS") || "4")
-    cols = String.to_integer(System.get_env("GOOGLE_SHEET_NUM_COLS") || "12")
-
     sheet_id = socket.assigns[:sheet_id]
     Logger.debug "Getting details for sheet: #{sheet_id}"
 
     # TODO error handling etc
-    {:ok, pid} = Spreadsheets.Client.Google.get_spreadsheet(%{name: sheet_id})
-    {:ok, spreadsheet} = Spreadsheets.Client.Google.fetch_data(%{pid: pid, rows: rows, cols: cols})
+    spreadsheet =
+      GenServer.call(DataStore.Receiver, {:get, sheet_id, :google_spreadsheet, %{sheet_name: "grid", range: "A1:NB49"}})
 
-    body = %{"data" => spreadsheet}
-
-    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: body}
+    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: %{"data" => spreadsheet["values"]}}
 
     {:noreply, socket}
   end
