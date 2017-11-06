@@ -1,4 +1,7 @@
 defmodule ApiWeb.DataSourceChannel do
+  alias Core.Repo
+  alias Core.Schemas.DataSource
+
   use Phoenix.Channel
   require Logger
 
@@ -20,11 +23,11 @@ defmodule ApiWeb.DataSourceChannel do
     {:ok, socket}
   end
 
-  def join("dataSource:sheets:" <> sheet_id, message, socket) do
-    Logger.debug "***************************************************"
-    Logger.debug "Joined with sheet_id: #{sheet_id}"
+  def join("dataSource:sheets:" <> data_source_id, message, socket) do
+    Logger.debug "*************************************************************"
+    Logger.debug "Joined sheets with data_source_id: #{data_source_id}"
 
-    socket = assign(socket, :sheet_id, sheet_id)
+    socket = assign(socket, :sheet_data_source, Repo.get(DataSource, data_source_id))
 
     Process.flag(:trap_exit, true)
     :timer.send_interval(5000, :ping_from_google)
@@ -34,7 +37,7 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def join("dataSource:haven:" <> account_id, message, socket) do
-    Logger.debug "***************************************************"
+    Logger.debug "*************************************************************"
     Logger.debug "Joined with account_id: #{account_id}"
 
     socket = assign(socket, :account_id, account_id)
@@ -57,14 +60,14 @@ defmodule ApiWeb.DataSourceChannel do
   end
 
   def handle_info(:ping_from_google, socket) do
-    sheet_id = socket.assigns[:sheet_id]
-    Logger.debug "Getting details for sheet: #{sheet_id}"
+    ds = socket.assigns[:sheet_data_source]
+    Logger.debug "Getting details for sheet: #{ds.id}"
 
     # TODO error handling etc
     spreadsheet =
-      GenServer.call(DataStore.Receiver, {:get, sheet_id, :google_spreadsheet, %{sheet_name: "grid", range: "A1:NB49"}})
+      GenServer.call(DataStore.Receiver, {:get, ds.meta["sheet_id"], :google_spreadsheet, %{sheet_name: ds.meta["sheet_name"], range: ds.meta["range"]}})
 
-    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string sheet_id), body: %{"data" => spreadsheet["values"]}}
+    push socket, "new:msg", %{user: "SYSTEM", uuid: (to_string ds.id), body: %{"data" => spreadsheet["values"]}}
 
     {:noreply, socket}
   end

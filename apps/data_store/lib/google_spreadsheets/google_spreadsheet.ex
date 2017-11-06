@@ -54,10 +54,9 @@ defmodule GoogleSpreadsheet do
     updated_data =
       case actions[:request_data].run(spreadsheet_id, query_data) do
         {:ok, body} ->
-          Logger.debug "GoogleSpreadsheet :ok, will update.."
           body
         {:error, _} ->
-          Logger.debug "GoogleSpreadsheet :error, will leave as is.."
+          Logger.warn "GoogleSpreadsheet [#{spreadsheet_id}] :error, will leave local data as is.."
           state[:data]
       end
 
