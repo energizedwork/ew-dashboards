@@ -60,10 +60,16 @@ Heroku based deploys using Heroku CI. Pushes to origin/master will auto deploy o
 $ git push origin master
 ```
 
-
 ```bash
 # deploy a branch
 $ git remote add staging 	https://git.heroku.com/ew-dashboards-staging.git
 
 $ git push staging my-branch-name:master
+```
+
+### DB Seeds (non destructive)
+
+```bash
+$ heroku run bash
+~ $ POOL_SIZE=2 mix run apps/api/priv/repo/seeds.exs
 ```
