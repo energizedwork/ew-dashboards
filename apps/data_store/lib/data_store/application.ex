@@ -1,9 +1,12 @@
 defmodule DataStore.Application do
+  require Logger
+  
   @moduledoc false
 
   use Application
 
   def start(_type, _args) do
+    Logger.debug "DataStore.Application start..."
     children = [
       {GoogleSpreadsheet.Supervisor, []},
       {DataStore.DataSourceStarter, []},

@@ -1,4 +1,5 @@
 defmodule DataStore.Action.RequestGoogleSpreadsheetData do
+  require Logger
 
   @moduledoc """
 
