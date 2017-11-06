@@ -1,46 +1,51 @@
-# DataStore
+# Data Store
 
 Application to look up and hold state from the Google Sheets.
 
 One process will be created per lookup.
 
+This application is run independently of the api project. This allows the application to run
+on a separate node.
+
+Starting the application:
+
+1. First navigate to the application's directory and export the credentials
+
 ```bash
 $ cd apps/data_store
 $ mix deps.get
 $ export GCP_CREDENTIALS="$(< /path/to/service_account.json)" # see Google Auth Setup below
-$ iex -S mix
 ```
 
-```elixir
-# retrieving sheets
-iex()> sheet_id = "1P0okW7oVus2KR423Ob1DgbVNCbR_QNg3OjNPj04zcsI"
-iex()> query = %{sheet_name: "Sheet1", range: "A1:L7"}
+2. Start with `iex --sname data -S mix`
+3. From this iex session you can test by running the following:
 
-iex()> GoogleSpreadsheet.Supervisor.start_data_source(sheet_id, query)
-iex()> GoogleSpreadsheet.data(sheet_id)
+```
+iex(data@HULK)1> GenServer.call(DataStore.Receiver, {:get, spreadsheet_id, :google_spreadsheet, %{sheet_name: "Sheet1", range: "A1:L7"}})
 
 # inspect running processes as you retrieve sheets
 # (view Data Store application and click on PIDs to view their state)
-iex()> :observer.start
+iex(data@HULK)2> :observer.start
 
 ```
 
-## Installation
+To connect from another node, i.e. the api application:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `data_store` to your list of dependencies in `mix.exs`:
+1. Start the data store application like above.
+2. Navigate to the api's directory
 
-```elixir
-def deps do
-  [
-    {:data_store, "~> 0.1.0"}
-  ]
-end
+```bash
+$ cd apps/api
+$ mix deps.get
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/data_store](https://hexdocs.pm/data_store).
+3. Start with `iex --sname api -S mix` or `iex --sname api -S mix phx.server`
+4. From this iex session you can test by running the following:
+
+```
+iex(api@HULK)4> GenServer.call({DataStore.Receiver, :"data@HULK"}, {:get, spreadsheet_id, :google_spreadsheet, %{sheet_name: "Sheet1", range: "A1:L7"}})
+
+```
 
 ## Google Auth Setup
 1. Use [this](https://console.developers.google.com/start/api?id=sheets.googleapis.com) wizard to create or select a project in the Google Developers Console and automatically turn on the API. Click __Continue__, then __Go to credentials__.

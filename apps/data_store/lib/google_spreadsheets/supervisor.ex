@@ -8,7 +8,7 @@ defmodule GoogleSpreadsheet.Supervisor do
 
   @supervisor GoogleSpreadsheet.Supervisor
   @actions %{
-    request_data: DataStore.Actions.RequestGoogleSpreadsheetData
+    request_data: DataStore.Action.RequestGoogleSpreadsheetData
   }
 
   def start_link(_args),

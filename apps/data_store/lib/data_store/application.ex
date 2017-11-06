@@ -7,6 +7,7 @@ defmodule DataStore.Application do
     children = [
       {GoogleSpreadsheet.Supervisor, []},
       {DataStore.DataSourceStarter, []},
+      {DataStore.Receiver, []},
       {Registry, keys: :duplicate, name: DataStore.Registry}
     ]
 

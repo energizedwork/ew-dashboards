@@ -1,4 +1,4 @@
-defmodule DataStore.Actions.RequestGoogleSpreadsheetData do
+defmodule DataStore.Action.RequestGoogleSpreadsheetData do
 
   @moduledoc """
 

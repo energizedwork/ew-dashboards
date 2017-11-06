@@ -27,7 +27,7 @@ defmodule GoogleSpreadsheet do
   @update_interval 10_000
 
   def start_link(spreadsheet_id, actions, query_data),
-    do: GenServer.start_link(__MODULE__, [spreadsheet_id, actions, query_data], name: String.to_atom(spreadsheet_id))
+    do: GenServer.start_link(__MODULE__, [spreadsheet_id, actions, query_data])
 
   def data(spreadsheet_id) do
     spreadsheet_id
@@ -36,7 +36,7 @@ defmodule GoogleSpreadsheet do
   end
 
   def init([spreadsheet_id, actions, query_data]) do
-    Registry.register(DataStore.Registry, :google_spreadsheet, spreadsheet_id)
+    Registry.register(DataStore.Registry, :google_spreadsheet, {spreadsheet_id, query_data.sheet_name, query_data.range})
     send(self(), :refresh_data)
     {:ok, %{spreadsheet_id: spreadsheet_id, actions: actions, query_data: query_data}}
   end
