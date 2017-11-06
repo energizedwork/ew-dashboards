@@ -16,8 +16,6 @@ defmodule DataStore.Action.RequestGoogleSpreadsheetData do
 
   """
 
-  alias GoogleSpreadsheet.QueryData
-
   @auth_scope "https://www.googleapis.com/auth/spreadsheets"
   @url "https://sheets.googleapis.com/v4/spreadsheets/"
   @opts [ssl: [{:versions, [:'tlsv1.2']}]]
@@ -29,10 +27,10 @@ defmodule DataStore.Action.RequestGoogleSpreadsheetData do
     |> case do
          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
            {:ok, Poison.decode!(body) }
-         {:ok, %HTTPoison.Response{status_code: status_code, body: body} = resp } when status_code >= 400 ->
+         {:ok, %HTTPoison.Response{status_code: status_code, body: _body} = resp } when status_code >= 400 ->
            Logger.error "Error: #{inspect resp}"
            {:error , %{status: status_code, data: nil} }
-         {:error, %HTTPoison.Error{reason: reason} = err} ->
+         {:error, %HTTPoison.Error{reason: _reason} = err} ->
            Logger.error "Error 500: #{inspect err}"
            {:error, %{status: 500, data: nil}}
        end
