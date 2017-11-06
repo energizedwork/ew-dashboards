@@ -4,7 +4,13 @@ defmodule HavenPower.Repo do
   """
 
   def get(module, id) do
-    Enum.find all(module), fn map -> map.account_id == id end
+    account = Enum.find all(module), fn map -> map.account_id == id end
+
+    case account do
+      nil -> defaultAccount
+      _ -> account
+    end
+
   end
 
   def get_by(module, params) do
@@ -16,7 +22,7 @@ defmodule HavenPower.Repo do
   def all(HavenPower.Account) do
     [%HavenPower.Account{account_id: 1, name: "Gus", data: [["Apr", "May", "Jun"], ["4", "5", "6"]]},
      %HavenPower.Account{account_id: 2, name: "Matt", data: [["Jan", "Feb", "Mar"], ["1", "2", "3"]]},
-     %HavenPower.Account{account_id: 998877, name: "UI WIdget", data: random_data()}
+     %HavenPower.Account{account_id: 998877, name: "UI Widget", data: random_data()}
     ]
   end
   def all(_module), do: []
@@ -69,5 +75,9 @@ defmodule HavenPower.Repo do
       [Enum.map(headers, &Kernel.to_string/1)],
       body
     )
+  end
+
+  defp defaultAccount do
+     %HavenPower.Account{account_id: -1, name: "Default Account", data: [["This", "Is", "Default", "Data"], ["1", "2", "3", "4"]]}
   end
 end
