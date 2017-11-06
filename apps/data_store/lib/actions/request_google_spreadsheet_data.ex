@@ -28,11 +28,13 @@ defmodule DataStore.Action.RequestGoogleSpreadsheetData do
     |> client().get(headers(), @opts)
     |> case do
          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-           Poison.decode!(body)
-         {:ok, %HTTPoison.Response{status_code: status_code}} when status_code > 400 ->
-           %{status: status_code, data: nil}
-         _ ->
-           %{status: 500, data: nil}
+           {:ok, Poison.decode!(body) }
+         {:ok, %HTTPoison.Response{status_code: status_code, body: body} = resp } when status_code >= 400 ->
+           Logger.error "Error: #{inspect resp}"
+           {:error , %{status: status_code, data: nil} }
+         {:error, %HTTPoison.Error{reason: reason} = err} ->
+           Logger.error "Error 500: #{inspect err}"
+           {:error, %{status: 500, data: nil}}
        end
   end
 

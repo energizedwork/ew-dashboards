@@ -50,7 +50,18 @@ defmodule GoogleSpreadsheet do
   def handle_info(:refresh_data, %{spreadsheet_id: spreadsheet_id, actions: actions, query_data: query_data} = state) do
     Logger.debug "GoogleSpreadsheet [#{spreadsheet_id}] refreshing..."
     Process.send_after(self(), :refresh_data, @update_interval)
-    {:noreply, Map.put(state, :data, actions[:request_data].run(spreadsheet_id, query_data))}
+
+    updated_data =
+      case actions[:request_data].run(spreadsheet_id, query_data) do
+        {:ok, body} ->
+          Logger.debug "GoogleSpreadsheet :ok, will update.."
+          body
+        {:error, _} ->
+          Logger.debug "GoogleSpreadsheet :error, will leave as is.."
+          state[:data]
+      end
+
+    {:noreply, Map.put(state, :data, updated_data)}
   end
 
   # synchronous
