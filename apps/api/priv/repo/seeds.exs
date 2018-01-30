@@ -21,6 +21,13 @@ data_sources =  [
           }
   },
   %DataSource{
+    name: "Matt's test sheet (RobC tab)",
+    meta: %{sheet_name: "RobC",
+            range: "A1:Z200",
+            sheet_id: "1P0okW7oVus2KR423Ob1DgbVNCbR_QNg3OjNPj04zcsI"
+          }
+  },
+  %DataSource{
     name: "Matt's test sheet #2",
     meta: %{sheet_name: "MSP",
             range: "A1:C7",
@@ -46,6 +53,27 @@ data_sources =  [
     meta: %{sheet_name: "GM&PM MoM",
             range: "B27:Q34",
             sheet_id: "1wVQwHXWx3tMB0eOhRVfqIFwdv0_lmcrluHi4KavkxZQ"
+          }
+  },
+  %DataSource{
+    name: "EW KPI deck December 2017 (DRAFT) - Cash Flow",
+    meta: %{sheet_name: "Cash Flow",
+            range: "A1:Z500",
+            sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
+          }
+   },
+  %DataSource{
+    name: "EW KPI deck December 2017 (DRAFT) - Summary",
+    meta: %{sheet_name: "Summary",
+            range: "A1:Z500",
+            sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
+          }
+   },
+  %DataSource{
+    name: "EW KPI deck December 2017 (DRAFT) - GM&PM YoY",
+    meta: %{sheet_name: "GM&PM YoY",
+            range: "A1:Z500",
+            sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
           }
    }
 ]
