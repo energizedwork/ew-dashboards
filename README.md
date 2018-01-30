@@ -9,7 +9,7 @@ This is an umbrella project that contains a number of isolated, executable appli
 - [apps/api](apps/api/README.md)
 - [apps/core](apps/core/README.md)
 - [apps/tasks](apps/tasks/README.md)
-- [apps/spreadsheets](apps/spreadsheets/README.md)
+- [apps/data_store](apps/data_store/README.md)
 - [apps/haven_power](apps/spreadsheets/README.md)
 
 
@@ -37,7 +37,7 @@ $ mix phx.server
 # or with a REPL
 $ iex -S mix phx.server
 ```
-The API is available at [`localhost:4000`](http://localhost:4000) (not currently in use!).
+The API is available at [`localhost:4000`](http://localhost:4000) (not currently used in Prod UI !).
 
 The UI uses the Phoenix Channel at [`ws://localhost:4000/socket/websocket`](ws://localhost:4000/socket/websocket)
 
@@ -71,5 +71,14 @@ $ git push staging my-branch-name:master
 
 ```bash
 $ heroku run bash
-~ $ POOL_SIZE=2 mix run apps/api/priv/repo/seeds.exs
+$ POOL_SIZE=2 mix run apps/api/priv/repo/seeds.exs
+
+# view inserted rows
+$ POOL_SIZE=2 iex -S mix
+
+iex()> alias Core.Repo
+iex()> alias Core.Schemas.DataSource
+iex()> Repo.all DataSource
+
+
 ```
