@@ -56,23 +56,9 @@ data_sources =  [
           }
   },
   %DataSource{
-    name: "EW KPI deck December 2017 (DRAFT) - Cash Flow",
-    meta: %{sheet_name: "Cash Flow",
-            range: "A1:Z500",
-            sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
-          }
-   },
-  %DataSource{
-    name: "EW KPI deck December 2017 (DRAFT) - Summary",
-    meta: %{sheet_name: "Summary",
-            range: "A1:Z500",
-            sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
-          }
-   },
-  %DataSource{
-    name: "EW KPI deck December 2017 (DRAFT) - GM&PM YoY",
-    meta: %{sheet_name: "GM&PM YoY",
-            range: "A1:Z500",
+    name: "EW KPI deck December 2017 (DRAFT) - Public Dashboard",
+    meta: %{sheet_name: "Public Dashboard",
+            range: "A1:Z700",
             sheet_id: "1bfVq7-UpBvX7aBFXqoeW_-045iGK676_orI9swp8OKw"
           }
    }
